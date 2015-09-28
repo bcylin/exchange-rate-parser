@@ -14,11 +14,32 @@ get "/rates.json" do
     return
   end
 
+  tableRows = html.xpath("//div[@id='slice1']//tr[@class]")
   rates = {
-    html: html
+    url: url,
+    count: tableRows.count,
+    results: tableRows.map { |node| parseNode(node) }
   }
 
   status 200
   headers "Content-Type" => "application/json;charset=utf-8"
   body rates.to_json
+end
+
+
+private
+
+# Extract data from the <tr> node.
+# @return {Hash} Exchange rates of a currency. { currency_symbol => { type_of_rate => rate } }
+def parseNode(node)
+  name = node.xpath(".//td[@class='titleLeft']").map { |node| node.content }.first
+  symbol = name.match(/[A-Z]+/).to_s
+
+  keys = [:selling_rate, :buying_rate, :cash_selling_rate, :cash_buying_rate]
+  values = node.xpath(".//td[@class='decimal']").map { |node| node.content }
+
+  rates = Hash[keys.zip(values)]
+  rates[:name] = name
+
+  data = { symbol.to_sym => rates }
 end

@@ -26,6 +26,10 @@ get "/rates.json" do
   body rates.to_json
 end
 
+not_found do
+  halt 404, "Page not found"
+end
+
 
 private
 

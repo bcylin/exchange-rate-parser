@@ -18,7 +18,7 @@ get "/rates.json" do
   rates = {
     url: url,
     count: tableRows.count,
-    results: tableRows.map { |node| parseNode(node) }
+    results: tableRows.reduce({}) { |accumulator, node| accumulator.merge parseNode(node) }
   }
 
   status 200

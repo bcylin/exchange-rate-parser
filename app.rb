@@ -43,7 +43,7 @@ def parseNode(node)
   values = node.xpath(".//td[@class='decimal']").map { |node| node.content }
 
   rates = Hash[keys.zip(values)]
-  rates[:name] = name
+  rates[:name] = name[1..-1]  # remove the &nbsp; in the front
 
   data = { symbol.to_sym => rates }
 end

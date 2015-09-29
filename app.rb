@@ -14,9 +14,12 @@ get "/rates.json" do
     return
   end
 
+  datetime = html.xpath("//td[@width]//td[@style]").map(&:content).first.match(/([\d\/]+\s[\d:]+)/)
   tableRows = html.xpath("//div[@id='slice1']//tr[@class]")
+
   rates = {
     url: url,
+    updated_at: datetime,
     count: tableRows.count,
     results: tableRows.reduce({}) { |accumulator, node| accumulator.merge parseNode(node) }
   }

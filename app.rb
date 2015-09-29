@@ -43,7 +43,10 @@ def parseNode(node)
   symbol = name.match(/[A-Z]+/).to_s
 
   keys = [:selling_rate, :buying_rate, :cash_selling_rate, :cash_buying_rate]
-  values = node.xpath(".//td[@class='decimal']").map(&:content)
+  values = node.xpath(".//td[@class='decimal']").map do |node|
+    content = node.content
+    content == "-" ? nil : content
+  end
 
   rates = Hash[keys.zip(values)]
   rates[:name] = name[1..-1]  # remove the &nbsp; in the front

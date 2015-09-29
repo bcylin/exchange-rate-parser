@@ -36,11 +36,11 @@ private
 # Extract data from the <tr> node.
 # @return {Hash} Exchange rates of a currency. { currency_symbol => { type_of_rate => rate } }
 def parseNode(node)
-  name = node.xpath(".//td[@class='titleLeft']").map { |node| node.content }.first
+  name = node.xpath(".//td[@class='titleLeft']").map(&:content).first
   symbol = name.match(/[A-Z]+/).to_s
 
   keys = [:selling_rate, :buying_rate, :cash_selling_rate, :cash_buying_rate]
-  values = node.xpath(".//td[@class='decimal']").map { |node| node.content }
+  values = node.xpath(".//td[@class='decimal']").map(&:content)
 
   rates = Hash[keys.zip(values)]
   rates[:name] = name[1..-1]  # remove the &nbsp; in the front

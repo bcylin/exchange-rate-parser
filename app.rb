@@ -14,9 +14,12 @@ get "/rates.json" do
     return
   end
 
+  datetime = html.xpath("//td[@width]//td[@style]").map(&:content).first.match(/([\d\/]+\s[\d:]+)/)
   tableRows = html.xpath("//div[@id='slice1']//tr[@class]")
+
   rates = {
     url: url,
+    updated_at: datetime,
     count: tableRows.count,
     results: tableRows.reduce({}) { |accumulator, node| accumulator.merge parseNode(node) }
   }
@@ -36,11 +39,14 @@ private
 # Extract data from the <tr> node.
 # @return {Hash} Exchange rates of a currency. { currency_symbol => { type_of_rate => rate } }
 def parseNode(node)
-  name = node.xpath(".//td[@class='titleLeft']").map { |node| node.content }.first
+  name = node.xpath(".//td[@class='titleLeft']").map(&:content).first
   symbol = name.match(/[A-Z]+/).to_s
 
   keys = [:selling_rate, :buying_rate, :cash_selling_rate, :cash_buying_rate]
-  values = node.xpath(".//td[@class='decimal']").map { |node| node.content }
+  values = node.xpath(".//td[@class='decimal']").map do |node|
+    content = node.content
+    content == "-" ? nil : content
+  end
 
   rates = Hash[keys.zip(values)]
   rates[:name] = name[1..-1]  # remove the &nbsp; in the front

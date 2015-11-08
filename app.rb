@@ -42,7 +42,7 @@ def parseNode(node)
   name = node.xpath(".//td[@class='titleLeft']").map(&:content).first
   symbol = name.match(/[A-Z]+/).to_s
 
-  keys = [:selling_rate, :buying_rate, :cash_selling_rate, :cash_buying_rate]
+  keys = [:cash_buying_rate, :cash_selling_rate, :buying_rate, :selling_rate]
   values = node.xpath(".//td[@class='decimal']").map do |node|
     content = node.content
     content == "-" ? nil : content

@@ -4,7 +4,7 @@ require "open-uri"
 require "sinatra"
 
 get "/rates.json" do
-  url = "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm"
+  url = "http://rate.bot.com.tw/xrt?Lang=zh-TW"
   begin
     html = Nokogiri::HTML(open(url))
   rescue
@@ -14,8 +14,8 @@ get "/rates.json" do
     return
   end
 
-  datetime = html.xpath("//td[@width]//td[@style]").map(&:content).first.match(/([\d\/]+\s[\d:]+)/)
-  tableRows = html.xpath("//div[@id='slice1']//tr[@class]")
+  datetime = html.css("span.time").first.content
+  tableRows = html.css("table > tbody > tr")
 
   rates = {
     url: url,
@@ -39,17 +39,16 @@ private
 # Extract data from the <tr> node.
 # @return {Hash} Exchange rates of a currency. { currency_symbol => { type_of_rate => rate } }
 def parseNode(node)
-  name = node.xpath(".//td[@class='titleLeft']").map(&:content).first
+  name = node.css("div.print_show").first.content
   symbol = name.match(/[A-Z]+/).to_s
 
-  keys = [:cash_buying_rate, :cash_selling_rate, :buying_rate, :selling_rate]
-  values = node.xpath(".//td[@class='decimal']").map do |node|
-    content = node.content
-    content == "-" ? nil : content
-  end
-
-  rates = Hash[keys.zip(values)]
-  rates[:name] = name[1..-1]  # remove the &nbsp; in the front
+  rates = {
+    cash_buying_rate:  node.css("td[data-table=本行現金買入]").first.content,
+    cash_selling_rate: node.css("td[data-table=本行現金賣出]").first.content,
+    buying_rate:       node.css("td[data-table=本行即期買入]").first.content,
+    selling_rate:      node.css("td[data-table=本行即期賣出]").first.content,
+    name: name.strip
+  }
 
   data = { symbol.to_sym => rates }
 end

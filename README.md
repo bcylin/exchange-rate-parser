@@ -1,10 +1,12 @@
 # Exchange Rate Parser
 
-Fetch the webpage from [Bank of Taiwan](http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm) and extract the exchange rates of each currency as the following JSON:
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/bcylin/exchange-rate-parser/blob/master/LICENSE)
+
+Parse the webpage from [Bank of Taiwan](https://rate.bot.com.tw/xrt?Lang=en-US) and extract the exchange rates as the following JSON:
 
 ```js
 {
-  "url": "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm",
+  "url": "https://rate.bot.com.tw/xrt?Lang=zh-TW",
   "updated_at": "2015/09/30 16:01",
   "count": 19,
   "results": {
@@ -18,6 +20,12 @@ Fetch the webpage from [Bank of Taiwan](http://rate.bot.com.tw/Pages/Static/UIP0
     // ...
   }
 }
+```
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/bcylin/exchange-rate-parser)
+
+```
+https://#{app-name}.herokuapp.com/rates.json
 ```
 
 ## Test Locally

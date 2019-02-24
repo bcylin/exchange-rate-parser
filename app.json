@@ -1,0 +1,12 @@
+{
+  "name": "BOT Exchange Rate Parser",
+  "description": "Parse the webpage from Bank of Taiwan and extract the exchange rates as JSON.",
+  "repository": "https://github.com/bcylin/exchange-rate-parser",
+  "keywords": ["exchange", "rate", "parser", "json"],
+  "website": "https://github.com/bcylin/exchange-rate-parser",
+  "buildpacks": [
+    {
+      "url": "https://github.com/bundler/heroku-buildpack-bundler2"
+    }
+  ]
+}

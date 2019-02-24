@@ -1,5 +1,6 @@
 source "http://rubygems.org"
 
+gem "bundler"
 gem "json"
 gem "nokogiri"
 gem "pry"

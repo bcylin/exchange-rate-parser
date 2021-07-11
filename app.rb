@@ -4,9 +4,9 @@ require "open-uri"
 require "sinatra"
 
 get "/rates.json" do
-  url = "http://rate.bot.com.tw/xrt?Lang=zh-TW"
+  url = "https://rate.bot.com.tw/xrt?Lang=zh-TW"
   begin
-    html = Nokogiri::HTML(open(url))
+    html = Nokogiri::HTML(URI.open(url))
   rescue
     status 503
     headers "Content-Type" => "application/json;charset=utf-8"
@@ -43,10 +43,10 @@ def parseNode(node)
   symbol = name.match(/[A-Z]+/).to_s
 
   rates = {
-    cash_buying_rate:  node.css("td[data-table=本行現金買入]").first.content,
-    cash_selling_rate: node.css("td[data-table=本行現金賣出]").first.content,
-    buying_rate:       node.css("td[data-table=本行即期買入]").first.content,
-    selling_rate:      node.css("td[data-table=本行即期賣出]").first.content,
+    cash_buying_rate:  node.css("td[data-table=本行現金買入]").first.content.strip,
+    cash_selling_rate: node.css("td[data-table=本行現金賣出]").first.content.strip,
+    buying_rate:       node.css("td[data-table=本行即期買入]").first.content.strip,
+    selling_rate:      node.css("td[data-table=本行即期賣出]").first.content.strip,
     name: name.strip
   }
 
